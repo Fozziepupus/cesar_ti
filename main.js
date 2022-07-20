@@ -19,97 +19,97 @@ periodo: quincenal
 */
 
 allPaymentsList = [
-    { 
-        "Cliente": "Carrie Bradshaw", 
-        "Articulo": "Smart TV Samsung 60", 
+    {
+        "Cliente": "Carrie Bradshaw",
+        "Articulo": "Smart TV Samsung 60",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "quincenal"
     },
-    { 
-        "Cliente": "Carrie Bradshaw", 
-        "Articulo": "Smart TV Samsung 60", 
+    {
+        "Cliente": "Carrie Bradshaw",
+        "Articulo": "Smart TV Samsung 60",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "quincenal"
     },
-    { 
-        "Cliente": "Carrie Bradshaw", 
-        "Articulo": "Smart TV Samsung 60", 
+    {
+        "Cliente": "Carrie Bradshaw",
+        "Articulo": "Smart TV Samsung 60",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "quincenal"
     },
-    { 
-        "Cliente": "Charlotte York", 
-        "Articulo": "", 
+    {
+        "Cliente": "Charlotte York",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "semanal"
     },
-    { 
-        "Cliente": "Charlotte York", 
-        "Articulo": "", 
+    {
+        "Cliente": "Charlotte York",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "semanal"
     },
-    { 
-        "Cliente": "Miranda Hobbes", 
-        "Articulo": "", 
+    {
+        "Cliente": "Miranda Hobbes",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "mensual"
     },
-    { 
-        "Cliente": "Miranda Hobbes", 
-        "Articulo": "", 
+    {
+        "Cliente": "Miranda Hobbes",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "mensual"
     },
-    { 
-        "Cliente": "Miranda Hobbes", 
-        "Articulo": "", 
+    {
+        "Cliente": "Miranda Hobbes",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "mensual"
     },
-    { 
-        "Cliente": "Miranda Hobbes", 
-        "Articulo": "", 
+    {
+        "Cliente": "Miranda Hobbes",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "mensual"
     },
-    { 
-        "Cliente": "Jack Berger", 
-        "Articulo": "", 
+    {
+        "Cliente": "Jack Berger",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "semanal"
     },
-    { 
-        "Cliente": "Kurt Harrington", 
-        "Articulo": "", 
+    {
+        "Cliente": "Kurt Harrington",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
         "Periodo": "quincenal"
     },
-    { 
-        "Cliente": "Kurt Harrington", 
-        "Articulo": "", 
+    {
+        "Cliente": "Kurt Harrington",
+        "Articulo": "",
         "Abono": "00.00",
         "Fecha": "12/07/2022",
         "Adeudo": "00.00",
@@ -120,6 +120,7 @@ allPaymentsList = [
 localStorage.setItem("paymentWeeklyOpts", JSON.stringify(paymentWeeklyOpts));
 localStorage.setItem("paymentBiweeklyOpts", JSON.stringify(paymentBiweeklyOpts));
 localStorage.setItem("paymentMonthlyOpts", JSON.stringify(paymentMonthlyOpts));
+localStorage.setItem("allPaymentList", JSON.stringify(allPaymentsList));
 
 paymentsArray = [];
 
@@ -127,33 +128,96 @@ $(document).ready(function () {
 
     console.log('It works!');
 
+    //loadCustomers();
+    //loadAutocompleteCustomers();
+
     let dataTablePayments = $('#tabPayments').DataTable({
-        data: [{ 
-            "Cliente": "Cliente uno", 
-            "Articulo": "Cama", 
+        data: [/*{
+            "Cliente": "Cliente Fijo Test",
+            "Articulo": "Artículo Test",
             "Abono": "200.00",
-            "Fecha": "12/07/2022", 
-            "Adeudo": "800.00", 
-            "Periodo": "semanal" },
-            { 
-                "Cliente": "Cliente dos", 
-                "Articulo": "Comedor", 
-                "Abono": "200.00",
-                "Fecha": "14/07/2022", 
-                "Adeudo": "600.00", 
-                "Periodo": "semanal" }
-            ],
+            "Fecha": "12/07/2022",
+            "Adeudo": "800.00",
+            "Periodo": "semanal"
+        }*/],
         columns: [
             { data: "Cliente" },
             { data: "Articulo" },
             { data: "Abono" },
             { data: "Fecha" },
             { data: "Adeudo" },
-            { data: "Periodo" }]
+            { data: "Periodo" }],
+        scrollX: true
     });
 
     $('.payment-section').hide();
     $('.section-payments-list').hide();
+
+
+    // load customer data for new payments
+
+    const list = JSON.parse(loadCustomers());
+
+    $("#txtCustomer").autocomplete({
+        // This shows the min length of charcters that must be typed before the autocomplete looks for a match.
+        minLength: 2,
+        source: function (request, response) {
+            const findTxt = request.term;
+            console.log(list);
+            const res = list.filter(function (i){
+                return i.customer.toLowerCase().indexOf(findTxt.toLowerCase()) >= 0;
+            });
+            //x.customer.includes(request.term)
+
+            const resMap = res.map(function(i){
+                return {
+                    label: i.customer,
+                    value: i.customer
+                }
+            });
+            response(resMap);
+            /*
+            response($.map(list, function (value, key) {
+                return {
+                    label: value.customer,
+                    value: value.customer
+                }
+            }));*/
+
+        },
+        focus: function (event, ui) {
+            $('#txtCustomer').val(ui.item.customer);
+            return false;
+        },
+        // Once a value in the drop down list is selected, do the following:
+        select: function (event, ui) {
+
+            dataTablePayments.clear().draw();
+
+            // place the person.given_name value into the textfield called 'select_origin'...
+            $('#txtCustomer').val(ui.item.value);
+            // and place the person.id into the hidden textfield called 'link_origin_id'. 
+            //$('#link_origin_id').val(ui.item.id);
+
+            // cargar los datos del cliente seleccionado
+
+            const allPaymentsStorage = JSON.parse(localStorage.getItem("allPaymentList"));
+
+            const filterSelectedUser = allPaymentsStorage.filter(d => {
+                return d.Cliente.toLowerCase().includes(ui.item.value.toLowerCase());
+            });
+
+            console.log('Filter selected user: ', filterSelectedUser);
+
+            dataTablePayments.rows.add(filterSelectedUser).draw();
+
+            loadCustomerData(filterSelectedUser[0]);
+
+            return false;
+        }
+    });
+
+
 
 
     $('#btnAddPayment').on('click', () => {
@@ -172,6 +236,7 @@ $(document).ready(function () {
     });
 
     $('#backToMain').on('click', () => {
+        dataTablePayments.clear().draw();
         $('.main-btns').show(500);
         $('.payment-section').hide(1000);
         $('.section-payments-list').hide(1000);
@@ -239,41 +304,22 @@ $(document).ready(function () {
 
             */
 
-            /*
-        dataTablePayments.rows.add([
-            values.txtCustomer,
-            values.txtProduct,
-            values.txtProductCost,
-            paymentDate,
-            debtAccount
-        ], [
-            values.txtCustomer,
-            values.txtProduct,
-            values.txtProductCost,
-            paymentDate,
-            debtAccount
-        ])
-            .draw();
-            */
-
-
-            dataTablePayments.rows.add( [ {
-                "Cliente":       values.txtCustomer,
-                "Articulo":   values.txtProduct,
-                "Abono":     values.txtProductCost,
-                "Fecha": paymentDate,
-                "Adeudo":     debtAccount,
-                "Periodo": values.selectPeriodType
-            }, {
-                "Cliente":       values.txtCustomer,
-                "Articulo":   values.txtProduct,
-                "Abono":     values.txtProductCost,
-                "Fecha": paymentDate,
-                "Adeudo":     debtAccount,
-                "Periodo": values.selectPeriodType
-            } ] )
-            .draw();
-
+        /*
+    dataTablePayments.rows.add([
+        values.txtCustomer,
+        values.txtProduct,
+        values.txtProductCost,
+        paymentDate,
+        debtAccount
+    ], [
+        values.txtCustomer,
+        values.txtProduct,
+        values.txtProductCost,
+        paymentDate,
+        debtAccount
+    ])
+        .draw();
+        */
 
         //dataTablePayments.row.add(paymentObjt).draw();
         $('#formAddPayment').trigger("reset");
@@ -310,3 +356,105 @@ loadBiweeklyOpts = (list, period) => {
     });
 };
 
+loadCustomers = () => {
+    let paymentsFullList = JSON.parse(localStorage.getItem("allPaymentList"));
+    const filterCustomersFromPayments = () => {
+        return paymentsFullList.filter((el) =>
+            el.toLowerCase().Periodo === 'semanal'
+        );
+    };
+
+    const uniqueIds = [];
+
+    let counterCustomer = 0;
+    const names = paymentsFullList.map(function (item) {
+        //return item['Cliente'];
+        return { "customer": item['Cliente'], "id": ++counterCustomer }
+    }).filter(element => {
+        const isDuplicate = uniqueIds.includes(element.customer);
+
+        if (!isDuplicate) {
+            uniqueIds.push(element.customer);
+
+            return true;
+        }
+
+        return false;
+    });
+
+    console.log(paymentsFullList);
+    console.log('names', names);
+    return JSON.stringify(names);
+};
+
+loadAutocompleteCustomers = () => {
+
+    /*
+    $( "#txtCustomer" ).autocomplete({
+        minLength: 0,
+        source: loadCustomers(),
+        focus: function( event, ui ) {
+          $( "#txtCustomer" ).val( ui.item.label );
+          return false;
+        },
+        select: function( event, ui ) {
+          $( "#txtCustomer" ).val( ui.item.label );
+          return false;
+        }
+      })
+      .autocomplete( "instance" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+          .append( "<div>" + item.customer + "</div>" )
+          .appendTo( ul );
+      };
+      */
+
+
+    /*
+    $("#txtCustomer").autocomplete({
+      //source have a url of a service
+      source: list,
+      minLength: 1//min = 2 characters
+      });
+      */
+
+
+    /*
+    $( "#txtCustomer" ).autocomplete({
+        source: function( request, response ) {
+          $.ajax( {
+            url: "search.php",
+            dataType: "jsonp",
+            data: {
+              term: request.term
+            },
+            success: function( data ) {
+              response( data );
+            }
+          } );
+        },
+        minLength: 2,
+        select: function( event, ui ) {
+          log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        }
+      } );
+      */
+
+};
+
+
+loadCustomerData = (customerData) => {
+    if (customerData) {
+        $('#txtProduct').val(customerData.Articulo);
+        $('#txtAddress').val('Ortoclasa Inf Pedregoso');
+        $('#txtProductCost').val('00.00');
+        $('#txtPoblation').val('SJR');
+        $('#selectSaleType').val('plazos');
+        $('#txtAgent').val('Vendedor uno');
+        //$('#selectPeriodType').val('semanal');
+        $('#selectPeriodType').val(customerData.Periodo).trigger('change');
+        $('#selectNumPayments').val(6);
+        $('#txtPayment').val(customerData.Abono);
+        $('#txtComments').val('sin comentarios');
+    }
+};
