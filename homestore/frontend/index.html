@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <!--
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+-->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <title>Mueblería</title>
+</head>
+<style>
+    header {
+        background-color: #143799;
+        color: aliceblue;
+        padding: 1em;
+        height: 15vh;
+    }
+
+    header>p,
+    h1,
+    h4 {
+        text-align: center;
+    }
+
+    /*
+    section {
+        border: solid 1px red;
+        margin: 1em !important;
+    }
+    */
+
+    .btn-space {
+        margin: 1em 0;
+    }
+
+    .buttons-sectioon {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .buttons-sectioon,
+    .buttons-section>button {
+        color: aliceblue;
+        font-weight: bold;
+        font-size: 2em !important;
+        height: 20vh;
+        width: 50vw;
+    }
+
+    .buttons-section>button:hover {
+        color: #e9a722;
+        font-size: 2.1em !important;
+    }
+
+    .button-orange-fzz {
+        background-color: #ff7a59;
+    }
+
+    .button-yellow-fzz {
+        background-color: #f4be4f;
+    }
+
+    .button-blue-fzz {
+        background-color: #143799;
+    }
+
+    .button-blue-light-fzz {
+        background-color: #28baa9;
+    }
+
+    .payment-section {
+        padding: 2em 2em;
+    }
+
+    .main-btns {
+        height: 85vh;
+        border: solid 1px red;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+</style>
+
+<body>
+    <header>
+        <p>
+        <h1>.:. MUEBLERÍA .:.</h1>
+        <h4>(POC v1.0.0)</h4>
+        </p>
+    </header>
+
+    <!--<section class="row buttons-section">
+    <section class="test d-flex align-items-center justify-content-center">    
+    -->
+    <div class="main-btns">
+        <section class="buttons-section text-center">
+            <button id="btnAddPayment" type="button" class="btn button-blue-light-fzz">Registrar Abono</button>
+            <button id="btnListPayments" type="button" class="btn button-blue-fzz btn-space">Listar Abonos</button>
+            <button id="btnReport" type="button" class="btn button-blue-fzz">Reporte Abono</button>
+        </section>
+    </div>
+
+    <section class="payment-section">
+        <form id="formAddPayment" action="#">
+            <div class="row container-form-pay">
+                <div class="col-6">
+                    <label for="txtCustomer">Cliente:</label>
+                    <input type="text" name="txtCustomer" id="txtCustomer" class="form-control">
+                    <label for="txtAddress">Dirección:</label>
+                    <input type="text" name="txtAddress" id="txtAddress" class="form-control">
+                    <label for="txtPoblation">Ciudad/Poblado:</label>
+                    <input type="text" name="txtPoblation" id="txtPoblation" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label for="txtProduct">Artículo:</label>
+                    <input type="text" name="txtProduct" id="txtProduct" class="form-control">
+                    <label for="txtProductCost">Precio de lista:</label>
+                    <input type="number" name="txtProductCost" id="txtProductCost" class="form-control">
+                    <label for="">Tipo de venta:</label>
+                    <select name="selectSaleType" id="selectSaleType" class="form-control">
+                        <option value="contado">Contado</option>
+                        <option value="plazos" selected>Plazos</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label for="txtAgent">Agente</label>
+                    <input type="text" name="txtAgent" id="txtAgent" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label for="selectPeriodType">Periodo:</label>
+                    <select name="selectPeriodType" id="selectPeriodType" class="form-control">
+                        <option value="0">seleccione un periodo</option>
+                        <option value="semanal">Semanal</option>
+                        <option value="quincenal">Quincenal</option>
+                        <option value="mensual">Mensual</option>
+                    </select>
+                    <label for="txtPayment">Abono:</label>
+                    <input type="number" name="txtPayment" id="txtPayment" class="form-control">
+                    <button id="savePayment" type="button" class="btn btn-info btn-space">Registrar abono</button>
+                    <button id="backToMain" type="button" class="btn btn-light btn-space">Cancelar</button>
+                </div>
+                <div class="col-6">
+                    <label for="selectNumPayments">Número de Plazos:</label>
+                    <select name="selectNumPayments" id="selectNumPayments" class="form-control">
+                        <option value="3" selected>seleccione un periodo</option>
+                    </select>
+                    <label for="txtComments">Comentarios:</label>
+                    <textarea name="txtComments" id="txtComments" cols="30" rows="3" class="form-control"></textarea>
+                </div>
+            </div>
+            <!--
+                <button id="savePayment" type="button" class="btn btn-info btn-space">Registrar abono</button>
+                <button id="backToMain" type="button" class="btn btn-light btn-space">Cancelar</button>
+            -->
+        </form>
+
+    </section>
+    <section class="section-payments-list">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <table id="tabPayments" class="display">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Articulo</th>
+                            <th>Abono</th>
+                            <th>Fecha</th>
+                            <th>Adeudo</th>
+                            <th>Periodo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+        crossorigin="anonymous"></script>
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
