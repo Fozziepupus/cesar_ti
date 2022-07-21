@@ -579,7 +579,8 @@ loadChartReport = () => {
                 y: {
                     beginAtZero: true
                 }
-            }
+            },
+            responsive: true
         }
     });
 
