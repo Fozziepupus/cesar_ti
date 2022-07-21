@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="jquery-ui.css">
     <link rel = "stylesheet" href = "http://jqueryui.com/resources/demos/style.css">
 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.css">
     <title>POC Mueblería</title>
 </head>
 <style>
@@ -119,8 +120,12 @@
     .section-report-payments {
         margin: 2em 1em;
         padding: 1em;
+        /*border: solid 1px red;*/
     }
 
+    #myChart {
+        margin-top: 2em;
+    }
 </style>
 
 <body>
@@ -288,11 +293,14 @@
     <!-- ALL SALES GRAPHICS -->
     <section class="section-report-payments">
         <div class="row">
-            <div class="col-md-10 offset-md-1">
+            <!-- height: 600px !important; -->
+            <div class="col-md-10 offset-md-1" >
                 <p>
-                    <h2>Reporte de Saldos</h2>
+                <h2>Reporte de Saldos</h2>
                 </p>
-                <canvas id="myChart" width="400" height="400"></canvas>
+                <!--<div class="chart-container" style="position: relative; width:80vw; height:40vh;">-->
+                    <canvas id="myChart"></canvas>
+                <!--</div>-->
             </div>
             <div class="col-md-6 offset-md-3 text-center">
                 <button type="button" class="backToMain btn btn-light btn-space">Regresar</button>
