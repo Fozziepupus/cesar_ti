@@ -15,32 +15,35 @@ Smart TV Samsung 60
 Prov: 13500
 Lista: prov + 15% = 15525
 credito: lista + 16% = 18009
+enganche: 10% del precio a 6 plazos = 1800.90
 periodo: quincenal
+adeudo despues de enganche: 16208.10
+abono: 6 plazos del restante de la deuda menos enganche = 2701.35
 */
 
 allPaymentsList = [
     {
         "Cliente": "Carrie Bradshaw",
         "Articulo": "Smart TV Samsung 60",
-        "Abono": "00.00",
-        "Fecha": "12/07/2022",
-        "Adeudo": "00.00",
+        "Abono": "2701.35",
+        "Fecha": "13/07/2022",
+        "Adeudo": "10805.40",
         "Periodo": "quincenal"
     },
     {
         "Cliente": "Carrie Bradshaw",
         "Articulo": "Smart TV Samsung 60",
-        "Abono": "00.00",
-        "Fecha": "12/07/2022",
-        "Adeudo": "00.00",
+        "Abono": "2701.35",
+        "Fecha": "06/07/2022",
+        "Adeudo": "13506.75",
         "Periodo": "quincenal"
     },
     {
         "Cliente": "Carrie Bradshaw",
         "Articulo": "Smart TV Samsung 60",
-        "Abono": "00.00",
-        "Fecha": "12/07/2022",
-        "Adeudo": "00.00",
+        "Abono": "1800.90",
+        "Fecha": "29/06/2022",
+        "Adeudo": "16208.10",
         "Periodo": "quincenal"
     },
     {
@@ -128,8 +131,14 @@ $(document).ready(function () {
 
     console.log('It works!');
 
+    $('.payment-section').hide();
+    $('.section-payments-list').hide();
+    $('.section-all-payments').hide();
+    $('.section-report-payments').hide();
+
     //loadCustomers();
     //loadAutocompleteCustomers();
+    loadChartReport();
 
     let dataTablePayments = $('#tabPayments').DataTable({
         data: [/*{
@@ -150,8 +159,31 @@ $(document).ready(function () {
         scrollX: true
     });
 
-    $('.payment-section').hide();
-    $('.section-payments-list').hide();
+
+    const allPaymentsStorage = JSON.parse(localStorage.getItem("allPaymentList"));
+    console.log('all payments history: ', allPaymentsStorage);
+    //dataTablePayments.rows.add(allPaymentsStorage).draw();
+
+
+    let dataTableFullPayments = $('#tabFullPayments')
+        .DataTable({
+            data: allPaymentsStorage/*[{
+                "Cliente": "Cliente Fijo Test",
+                "Articulo": "Artículo Test",
+                "Abono": "200.00",
+                "Fecha": "12/07/2022",
+                "Adeudo": "800.00",
+                "Periodo": "semanal"
+            }]*/,
+            columns: [
+                { data: "Cliente" },
+                { data: "Articulo" },
+                { data: "Abono" },
+                { data: "Fecha" },
+                { data: "Adeudo" },
+                { data: "Periodo" }],
+            scrollX: true
+        });
 
 
     // load customer data for new payments
@@ -164,12 +196,12 @@ $(document).ready(function () {
         source: function (request, response) {
             const findTxt = request.term;
             console.log(list);
-            const res = list.filter(function (i){
+            const res = list.filter(function (i) {
                 return i.customer.toLowerCase().indexOf(findTxt.toLowerCase()) >= 0;
             });
             //x.customer.includes(request.term)
 
-            const resMap = res.map(function(i){
+            const resMap = res.map(function (i) {
                 return {
                     label: i.customer,
                     value: i.customer
@@ -228,18 +260,47 @@ $(document).ready(function () {
     });
 
     $('#btnListPayments').on('click', () => {
-        alert('mostrar listado de registros de abono');
+        //alert('mostrar listado de registros de abono');
+        console.log('mostrar todos los abonos');
+        $('.main-btns').hide(500);
+        $('.payment-section').hide(500);
+        $('.section-report-payments').hide(500);
+        $('.section-all-payments').show(700);
     });
 
     $('#btnReport').on('click', () => {
-        alert('mostrar reportes');
+        //alert('mostrar reportes');
+        $('.main-btns').hide(500);
+        $('.payment-section').hide(500);
+        $('.section-all-payments').hide(500);
+        $('.section-report-payments').show(700);
+
     });
 
-    $('#backToMain').on('click', () => {
+    $('.backToMain').on('click', () => {
         dataTablePayments.clear().draw();
         $('.main-btns').show(500);
         $('.payment-section').hide(1000);
         $('.section-payments-list').hide(1000);
+        $('.section-all-payments').hide(1000);
+        $('.section-report-payments').hide(1000);
+    });
+
+    $('#btnSimulate').on('click', () => {
+        $('#txtProduct').val('Producto uno');
+        $('#txtAddress').val('Ortoclasa Inf Pedregoso');
+        $('#txtProductCost').val(12500.00);
+        $('#txtPoblation').val('SJR');
+        $('#selectSaleType').val('plazos');
+        $('#txtAgent').val('Vendedor uno');
+        $('#selectPeriodType').val('semanal').trigger('change');
+        $('#selectNumPayments').val(6);
+        $('#txtPayment').val(2500.00);
+        $('#txtComments').val('sin comentarios');
+        $('#txtProductCreditCost').val(15800.00);
+        $('#txtCreditLimit').val(20000.00);
+        $('#txtProductDeposit').val($('#txtProductCreditCost').val() * 0.1);
+        $('#txtProductCode').val('SKU726P1');
     });
 
     $('#savePayment').on('click', () => {
@@ -265,7 +326,8 @@ $(document).ready(function () {
         const txtPayment = values.txtPayment;
         const debtAccount = txtProductCost - txtPayment;
 
-        paymentObjt = [values.txtCustomer, values.txtProduct, txtProductCost, paymentDate, debtAccount, values.selectedPeriod];
+
+        paymentObjt = [values.txtCustomer, values.txtProduct, values.txtPayment, paymentDate, debtAccount, values.selectedPeriod];
 
         console.log('paymentObjt to table: ', paymentObjt);
         paymentsArray.push(paymentObjt);
@@ -321,7 +383,16 @@ $(document).ready(function () {
         .draw();
         */
 
-        //dataTablePayments.row.add(paymentObjt).draw();
+        const newPayment = {
+            "Cliente": values.txtCustomer,
+            "Articulo": values.txtProduct,
+            "Abono": txtPayment,
+            "Fecha": paymentDate,
+            "Adeudo": debtAccount,
+            "Periodo": values.selectPeriodType
+        };
+        console.log('newPayment: ', newPayment);
+        dataTablePayments.row.add(newPayment).draw();
         $('#formAddPayment').trigger("reset");
 
 
@@ -458,3 +529,60 @@ loadCustomerData = (customerData) => {
         $('#txtComments').val('sin comentarios');
     }
 };
+
+
+getRandomIntByMaxValue = (max) => {
+    return Math.floor(Math.random() * max);
+};
+
+
+loadChartReport = () => {
+
+    const graphicVals = [
+        getRandomIntByMaxValue(785848),
+        getRandomIntByMaxValue(525660),
+        getRandomIntByMaxValue(523898),
+        getRandomIntByMaxValue(261949),
+        getRandomIntByMaxValue(987899),
+        getRandomIntByMaxValue(1246824),
+    ];
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Abonos', 'Atrasos', 'Crédito', 'Contado', 'Compras', 'Inventario'],
+            datasets: [{
+                label: 'Reporte de saldos',
+                data: graphicVals,//[12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+};
+
+
